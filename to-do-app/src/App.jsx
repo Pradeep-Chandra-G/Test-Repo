@@ -10,7 +10,7 @@ function App() {
   return (
     <div className="flex flex-col">
       <Navbar />
-      <div className=" bg-white h-screen">
+      <div className=" bg-chili-red h-screen">
         <HomeLayout />
       </div>
     </div>
