@@ -1,46 +1,46 @@
 import React, { useEffect, useState } from "react";
 
-function NotesList() {
-  const URL = "http://localhost:8080/notes";
-  const [notes, setNotes] = useState([]); // store fetched notes
+function TaskList() {
+  const URL = "http://localhost:8080/tasks";
+  const [tasks, setTasks] = useState([]); // store fetched notes
 
   useEffect(() => {
-    const fetchNotes = async () => {
+    const fetchTasks = async () => {
       try {
         const response = await fetch(URL);
         if (!response.ok) {
           throw new Error("Failed to fetch notes");
         }
         const data = await response.json();
-        setNotes(data);
+        setTasks(data);
       } catch (error) {
         console.error(error);
       }
     };
 
-    fetchNotes();
+    fetchTasks();
   }, []);
 
   return (
     <div className="grid grid-cols-3 gap-4 p-4">
-      {notes.length > 0 ? (
-        notes.map((note) => (
+      {tasks.length > 0 ? (
+        tasks.map((task) => (
           <div
-            key={note.id}
+            key={task.id}
             className="border p-4 rounded shadow bg-white text-black"
           >
-            <h2 className="font-bold">{note.title}</h2>
-            <p>{note.content}</p>
-            <p>{note.status}</p>
+            <h2 className="font-bold">{task.title}</h2>
+            <p>{task.content}</p>
+            <p>{task.status}</p>
           </div>
         ))
       ) : (
-        <p className="col-span-3 text-center text-white">
-          No Notes Created Yet!
+        <p className="col-span-3 text-center text-red-600 font-mono">
+          No Tasks Created Yet!
         </p>
       )}
     </div>
   );
 }
 
-export default NotesList;
+export default TaskList;

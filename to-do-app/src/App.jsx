@@ -11,7 +11,7 @@ function App() {
     <div className="flex flex-col">
       <Navbar />
       <div className=" bg-white h-screen">
-        <CreateNote />
+        <HomeLayout />
       </div>
     </div>
   );
