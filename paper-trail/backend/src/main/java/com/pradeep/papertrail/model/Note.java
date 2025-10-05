@@ -1,13 +1,14 @@
 package com.pradeep.papertrail.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
@@ -19,15 +20,16 @@ public class Note {
 
     private String title;
 
-    @Column(columnDefinition = "TEXT", length = 10000)
-    private String content;
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(columnDefinition = "jsonb")
+    private Map<String, Object> content;
 
-    // Snapshot of creator’s name (denormalized field for display)
+    // Snapshot of creator's name (denormalized field for display)
     private String createdBy;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    @JsonIgnore   // Don’t serialize whole user to avoid cycles
+    @JsonIgnore   // Don't serialize whole user to avoid cycles
     private User user;
 
     // Keep permissions if you need to fetch them, otherwise remove this
@@ -67,11 +69,11 @@ public class Note {
         this.title = title;
     }
 
-    public String getContent() {
+    public Map<String, Object> getContent() {
         return content;
     }
 
-    public void setContent(String content) {
+    public void setContent(Map<String, Object> content) {
         this.content = content;
     }
 
