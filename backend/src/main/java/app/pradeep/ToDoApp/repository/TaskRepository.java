@@ -1,8 +1,8 @@
 package app.pradeep.ToDoApp.repository;
 
-import app.pradeep.ToDoApp.entity.Note;
+import app.pradeep.ToDoApp.entity.Task;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface NoteRepository extends JpaRepository<Note, Long> {
+public interface TaskRepository extends JpaRepository<Task, Long> {
 
 }

@@ -1,37 +1,37 @@
 package app.pradeep.ToDoApp.service;
 
-import app.pradeep.ToDoApp.entity.Note;
-import app.pradeep.ToDoApp.repository.NoteRepository;
+import app.pradeep.ToDoApp.entity.Task;
+import app.pradeep.ToDoApp.repository.TaskRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class NoteService {
+public class TaskService {
 
-    private final NoteRepository noteRepository;
+    private final TaskRepository taskRepository;
 
-    public NoteService(NoteRepository noteRepository) {
-        this.noteRepository = noteRepository;
+    public TaskService(TaskRepository taskRepository) {
+        this.taskRepository = taskRepository;
     }
 
-    public Note getNote(Long id) {
-        return noteRepository.findById(id).get();
+    public Task getTask(Long id) {
+        return taskRepository.findById(id).get();
     }
 
-    public List<Note> getAllNotes() {
-        return noteRepository.findAll();
+    public List<Task> getAllTasks() {
+        return taskRepository.findAll();
     }
 
-    public void createNote(Note note) {
-        noteRepository.save(note);
+    public void createTask(Task task) {
+        taskRepository.save(task);
     }
 
-    public void deleteNote(Long id) {
-        noteRepository.deleteById(id);
+    public void deleteTask(Long id) {
+        taskRepository.deleteById(id);
     }
 
-    public void updateNote(Note note) {
-        noteRepository.save(note);
+    public void updateTask(Task task) {
+        taskRepository.save(task);
     }
 }

@@ -1,26 +1,25 @@
 package app.pradeep.ToDoApp.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
-public class Note {
+public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     private String title;
 
+    @Lob
+    @Column(columnDefinition = "TEXT")
     private String content;
 
     private boolean status;
 
-    public Note() {
+    public Task() {
     }
 
-    public Note(long id, String title, String content, boolean status) {
+    public Task(long id, String title, String content, boolean status) {
         this.id = id;
         this.title = title;
         this.content = content;
@@ -61,7 +60,7 @@ public class Note {
 
     @Override
     public String toString() {
-        return "Note{" +
+        return "Task{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", content='" + content + '\'' +

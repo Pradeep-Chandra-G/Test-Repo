@@ -1,50 +1,50 @@
 package app.pradeep.ToDoApp.controller;
 
-import app.pradeep.ToDoApp.entity.Note;
-import app.pradeep.ToDoApp.service.NoteService;
+import app.pradeep.ToDoApp.entity.Task;
+import app.pradeep.ToDoApp.service.TaskService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/notes")
-public class NoteController {
+@RequestMapping("/tasks")
+public class TaskController {
 
-    private final NoteService noteService;
+    private final TaskService taskService;
 
-    public NoteController(NoteService noteService) {
-        this.noteService = noteService;
+    public TaskController(TaskService taskService) {
+        this.taskService = taskService;
     }
 
     @GetMapping
-    public List<Note> getNotes() {
-        return noteService.getAllNotes();
+    public List<Task> getTasks() {
+        return taskService.getAllTasks();
     }
 
     @GetMapping("/{id}")
-    public Note getNote(@PathVariable Long id) {
-        return noteService.getNote(id);
+    public Task getNote(@PathVariable Long id) {
+        return taskService.getTask(id);
     }
 
     @PostMapping
-    public ResponseEntity<String> createNote(@RequestBody Note note) {
-        noteService.createNote(note);
-        return ResponseEntity.ok("Note created");
+    public ResponseEntity<String> createNote(@RequestBody Task task) {
+        taskService.createTask(task);
+        return ResponseEntity.ok("Task created");
     }
 
-    @PostMapping("/{id}")
-    public ResponseEntity<String> updateNote(@PathVariable Long id,  @RequestBody Note note) {
-        if(noteService.getNote(id) == null) {
+    @PutMapping("/{id}")
+    public ResponseEntity<String> updateNote(@PathVariable Long id,  @RequestBody Task task) {
+        if(taskService.getTask(id) == null) {
             return ResponseEntity.notFound().build();
         }
-        noteService.updateNote(note);
-        return ResponseEntity.ok("Note updated");
+        taskService.updateTask(task);
+        return ResponseEntity.ok("Task updated");
     }
 
-    @DeleteMapping
-    public ResponseEntity<String> deleteNote(@RequestBody Note note) {
-        noteService.deleteNote(note.getId());
-        return ResponseEntity.ok("Note deleted");
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteNote(@PathVariable Long id) {
+        taskService.deleteTask(id);
+        return ResponseEntity.ok("Task deleted");
     }
 }
