@@ -12,7 +12,8 @@ public interface NotePermissionRepository extends JpaRepository<NotePermission, 
     Optional<NotePermission> findByNoteAndUser(Note note, User user);
 
     // Get all permissions for a user with a specific type
-    List<NotePermission> findByUserAndPermission(User user, NotePermission.Permission permission);
+    List<NotePermission> findByUserAndPermissionIn(User user, List<NotePermission.Permission> permissions);
+
 
     // Check if a permission exists for a note and user
     boolean existsByNoteAndUserAndPermission(Note note, User user, NotePermission.Permission permission);

@@ -77,13 +77,15 @@ public class NoteController {
         User user = userRepository.findByEmail(auth.getName())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        List<NoteDTO> sharedNotes = permissionRepository.findByUserAndPermission(user, NotePermission.Permission.READ)
+        List<NoteDTO> sharedNotes = permissionRepository
+                .findByUserAndPermissionIn(user, List.of(NotePermission.Permission.READ, NotePermission.Permission.EDIT))
                 .stream()
                 .map(NotePermission::getNote)
                 .filter(Objects::nonNull)
                 .distinct()
                 .map(this::convertToDTO)
                 .toList();
+
 
         return ResponseEntity.ok(sharedNotes);
     }

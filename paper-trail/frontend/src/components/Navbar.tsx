@@ -1,43 +1,53 @@
-import React, { useState, useRef, useEffect } from "react";
+// src/components/Navbar.tsx (UPDATED)
+import { useState, useRef, useEffect } from "react";
 import { Search, X } from "lucide-react";
 import { motion, type Variants } from "framer-motion";
+import { useAuth } from "../context/AuthContext";
 
-// Container animation (stagger children)
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
   show: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.15, // stagger each child by 0.15s
-      delayChildren: 0.5, // small initial delay
+      staggerChildren: 0.15,
+      delayChildren: 0.3,
     },
   },
 };
 
-// Each child animation: fade + slide from top
 const itemVariants: Variants = {
   hidden: { opacity: 0, y: -20 },
   show: {
     opacity: 1,
     y: 0,
-    transition: { type: "spring", stiffness: 150, damping: 18 },
+    transition: { type: "spring", stiffness: 300, damping: 15 },
   },
 };
 
 function Navbar() {
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
-  const [loggedIn, setLoggedIn] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const { user, isAuthenticated } = useAuth();
 
   useEffect(() => {
-    if (loggedIn && mobileSearchOpen && inputRef.current) {
+    if (isAuthenticated && mobileSearchOpen && inputRef.current) {
       inputRef.current.focus();
     }
-  }, [mobileSearchOpen, loggedIn]);
+  }, [mobileSearchOpen, isAuthenticated]);
+
+  const getUserInitial = () => {
+    if (user?.name) {
+      return user.name.charAt(0).toUpperCase();
+    }
+    if (user?.email) {
+      return user.email.charAt(0).toUpperCase();
+    }
+    return "U";
+  };
 
   return (
     <motion.div
-      className="font-semibold text-white text-lg"
+      className="font-semibold text-white text-lg md:pl-4 md:pr-4"
       variants={containerVariants}
       initial="hidden"
       animate="show"
@@ -50,7 +60,7 @@ function Navbar() {
           PaperTrail
         </h1>
 
-        {loggedIn && (
+        {isAuthenticated && (
           <motion.button
             className="md:hidden bg-white p-2 rounded-full text-black"
             onClick={() => setMobileSearchOpen(true)}
@@ -61,24 +71,28 @@ function Navbar() {
         )}
 
         <motion.div className="flex gap-8" variants={itemVariants}>
-          <div className="hidden md:flex items-center bg-white p-2 rounded-full">
-            <input
-              type="text"
-              placeholder="Search..."
-              className="px-2 inter bg-white text-black rounded-full focus:outline-none"
-            />
-            <button className="cursor-pointer">
-              <Search className="text-black w-6 h-6" />
-            </button>
-          </div>
+          {isAuthenticated && (
+            <>
+              <div className="hidden md:flex items-center bg-white p-2 rounded-full">
+                <input
+                  type="text"
+                  placeholder="Search..."
+                  className="px-2 inter bg-white text-black rounded-full focus:outline-none"
+                />
+                <button className="cursor-pointer">
+                  <Search className="text-black w-6 h-6" />
+                </button>
+              </div>
 
-          <div className="rounded-full w-12 h-12 bg-white flex items-center justify-center">
-            <h1 className="text-black">P</h1>
-          </div>
+              <div className="rounded-full w-12 h-12 bg-white flex items-center justify-center">
+                <h1 className="text-black font-bold">{getUserInitial()}</h1>
+              </div>
+            </>
+          )}
         </motion.div>
       </motion.div>
 
-      {loggedIn && mobileSearchOpen && (
+      {isAuthenticated && mobileSearchOpen && (
         <motion.div
           className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-start justify-center p-4 md:hidden"
           onClick={() => setMobileSearchOpen(false)}

@@ -1,93 +1,112 @@
+// src/components/SideBar.tsx
 import React from "react";
 import { motion, type Variants } from "framer-motion";
+import { useAuth } from "../context/AuthContext";
 
-// parent container variants (controls stagger)
-const container = {
-  hidden: { opacity: 0 },
+interface SideBarProps {
+  onNewNote: () => void;
+  onMenuClick: (menu: string) => void;
+}
+
+// Variants for sidebar container
+const sidebarVariants: Variants = {
+  hidden: { x: -100, opacity: 0 },
   show: {
+    x: 0,
     opacity: 1,
     transition: {
-      staggerChildren: 0.3, // gap between each child animation
-      delayChildren: 0.2, // delay before first animation starts
+      type: "spring",
+      stiffness: 120,
+      damping: 15,
+      mass: 0.9,
+      staggerChildren: 0.15, // stagger the children
+      delayChildren: 0.1,
     },
   },
 };
 
-// each child animates left → right
-const item: Variants = {
-  hidden: { opacity: 0, x: -50 },
-  show: { opacity: 1, x: 0, transition: { duration: 0.5, ease: "easeOut" } },
+// Variants for children (slide in slightly)
+const childVariants: Variants = {
+  hidden: { x: -30, opacity: 0 },
+  show: {
+    x: 0,
+    opacity: 1,
+    transition: {
+      type: "spring",
+      stiffness: 150,
+      damping: 18,
+    },
+  },
 };
 
-function SideBar() {
+function SideBar({ onNewNote, onMenuClick }: SideBarProps) {
+  const { logout } = useAuth();
+
+  const handleMenuClick = (menu: string) => {
+    if (menu === "Logout") {
+      logout();
+    } else {
+      onMenuClick(menu);
+    }
+  };
+
   return (
     <motion.div
       className="flex flex-col gap-12 p-2"
-      variants={container}
+      variants={sidebarVariants}
       initial="hidden"
       animate="show"
     >
-      <div className="">
-        <motion.button
-          variants={item}
-          className="flex roboto p-2 rounded-lg text-white md:text-3xl font-light bg-cyan-400 cursor-pointer"
+      {/* + Note Button */}
+      <motion.div variants={childVariants}>
+        <button
+          onClick={onNewNote}
+          className="flex roboto p-2 rounded-lg text-white md:text-3xl font-light bg-cyan-400 cursor-pointer hover:bg-cyan-500 transition"
         >
           + Note
-        </motion.button>
-      </div>
-      {/* SIDE MENU */}
-      <motion.div variants={item}>
-        <motion.div
-          variants={item}
-          className=" w-full outfit flex flex-col bg-white rounded-lg items-left p-2 gap-2"
-        >
-          <motion.h1
-            variants={item}
-            className="flex items-center justify-center font-semibold text-xl"
-          >
-            Menu
-          </motion.h1>
-          {["Dashboard", "My Notes", "Shared Notes", "Logout"].map(
-            (menu, i) => (
-              <motion.button
-                key={i}
-                variants={item}
-                className="p-2 bg-gray-300 rounded-xl text-black font-medium cursor-pointer"
-              >
-                {menu}
-              </motion.button>
-            )
-          )}
-        </motion.div>
+        </button>
       </motion.div>
 
-      {/* ACTIVITY */}
-      <motion.div variants={item}>
-        <motion.div
-          variants={item}
-          className="outfit flex flex-col bg-white rounded-lg items-left p-2 gap-2"
-        >
-          <motion.h1
-            variants={item}
-            className="flex items-center justify-center font-semibold text-xl"
-          >
+      {/* Menu Section */}
+      <motion.div variants={childVariants}>
+        <div className="w-full outfit flex flex-col bg-white rounded-lg items-left p-2 gap-2 shadow-md">
+          <h1 className="flex items-center justify-center font-semibold text-xl text-black">
+            Menu
+          </h1>
+          {["Dashboard", "My Notes", "Shared Notes", "Logout"].map(
+            (menu, i) => (
+              <button
+                key={i}
+                onClick={() => handleMenuClick(menu)}
+                className="p-2 bg-gray-300 rounded-xl text-black font-medium cursor-pointer hover:bg-gray-400 transition"
+              >
+                {menu}
+              </button>
+            )
+          )}
+        </div>
+      </motion.div>
+
+      {/* Activity Section */}
+      <motion.div variants={childVariants}>
+        <div className="outfit flex flex-col bg-white rounded-lg items-left p-2 gap-2 shadow-md">
+          <h1 className="flex items-center justify-center font-semibold text-xl text-black">
             Activity
-          </motion.h1>
+          </h1>
           {[
             "Edited Note-1 @ 6:30PM",
             "Edited Note-2 @ 7:30PM",
             "Edited Note-3 @ 8:30PM",
             "Edited Note-4 @ 9:30PM",
           ].map((activity, i) => (
-            <motion.button
+            <button
               key={i}
-              variants={item}
-              className="p-2 bg-gray-300 rounded-xl text-black font-medium cursor-pointer"
+              className="p-2 bg-gray-300 rounded-xl text-black font-medium cursor-pointer hover:bg-gray-400 transition"
             >
               {activity}
-            </motion.button>
+            </button>
           ))}
-        </motion.div>
+        </div>
       </motion.div>
     </motion.div>
   );

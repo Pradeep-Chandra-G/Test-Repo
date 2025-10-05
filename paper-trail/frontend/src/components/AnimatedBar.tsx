@@ -16,7 +16,7 @@ export default function AnimatedBar({
           bg-white 
           ${
             isHorizontal
-              ? "w-[85%] md:w-[94%] h-1 md:h-2"
+              ? "w-[85%] md:w-[90%] h-1 md:h-2"
               : "h-[90%] w-1 md:w-2"
           }
         `}
